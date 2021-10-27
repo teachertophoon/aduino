@@ -12,7 +12,7 @@ int freq(char note) {
   char note_name[] = { 'c', 'd', 'e', 'f', 'g', 'a', 'b', 'C' };
   int note_freq[] = { 262, 294, 330, 349, 393, 440, 494, 523 };
 
-  for (int i = 0; i < sizeof(note_name) / sizeof(note_name[0]) - 1; i++) {
+  for (int i = 0; i < sizeof(note_name) / sizeof(note_name[0]); i++) {
     if (note_name[i] == note) {
       return note_freq[i];
     }
