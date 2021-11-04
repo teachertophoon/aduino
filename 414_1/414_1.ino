@@ -13,14 +13,14 @@ void setup() {
   Timer1.pwm(SERVO, 0);
 
   Timer1.setPeriod(SERVO_PERIOD);
-  Timer1.setPwmDuty(SERVO, SERVO_MINDUTY);
+  Timer1.setPwmDuty(SERVO, SERVO_MINDUTY); // 한 주기 당 0.7밀리초 동안 HIGH 값을 줌
 
   delay(1000);
 
   for (int cnt = 0; cnt <= 2; cnt++) {
-    Timer1.setPwmDuty(SERVO, SERVO_MINDUTY);
+    Timer1.setPwmDuty(SERVO, SERVO_MINDUTY); // 0도로 회전
     delay(1000);
-    Timer1.setPwmDuty(SERVO, SERVO_MAXDUTY);
+    Timer1.setPwmDuty(SERVO, SERVO_MAXDUTY); // 180도로 회전
     delay(1000);
   }
 
