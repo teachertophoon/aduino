@@ -25,10 +25,52 @@ void setup() {
 
   delay(1000);
 
-  Serial.println(*questions);
-  Serial.println(*questions);
+  for (int n = 0; n < 4; n++) {
+    pinMode(button[n], INPUT);
+  }
+
+  pinMode(ACTIVE_BUZZER, OUTPUT);
 }
 
 void loop() {
-  
+  if (step == 1) {
+    int totalQuestionCount = sizeof(answers) / sizeof(answers[0]);
+    if (currentQuestion <= totalQuestionCount) {
+      Serial.print(questions[currentQuestion - 1]);
+      Serial.print(options[currentQuestion - 1]);
+      step++;
+    }
+    else {
+      // IDLE
+      step = 0;
+    }
+  }
+  else if (step == 2) {
+    int answer = answers[currentQuestion - 1];
+
+    for (int i = 0; i < 4; i++) {
+      if (digitalRead(button[i]) == HIGH) {
+        // 정답일 경우
+        if (i == answer - 1) {
+            // 440, 554, 659, 880 (딩동댕동!!)
+            tone(BUZZER, 440); delay(300); noTone(BUZZER);
+            tone(BUZZER, 554); delay(300); noTone(BUZZER);
+            tone(BUZZER, 659); delay(300); noTone(BUZZER);
+            tone(BUZZER, 880); delay(300); noTone(BUZZER);
+            step++;
+        }
+        // 정답이 아닐 경우
+        else {
+          // 능동 부저 (땡!)
+          digitalWrite(ACTIVE_BUZZER, HIGH);
+          delay(1000);
+          digitalWrite(ACTIVE_BUZZER, LOW);
+        }
+      }
+    }
+  }
+  else if (step == 3) {
+    step = 1;
+    currentQuestion++;
+  }
 }
