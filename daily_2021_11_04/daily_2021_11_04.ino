@@ -6,6 +6,7 @@ const int button[4] = { 5, 4, 3, 2 };
 
 int step = 1;
 int currentQuestion = 1;
+int buzzerMode = 0; // 0: 대기중, 1: 정답, 2: 오답
 
 // 문제
 const char *questions[2] = {
@@ -20,10 +21,7 @@ const char *options[2] = {
 };
 
 // 답
-const int answers[2] = { 4, 1 };
-
-// 함수 포인터 배열
-void (*fp[4])() = { buttonPressed1, buttonPressed2, buttonPressed3, buttonPressed4 }; 
+const int answers[2] = { 1, 1 };
 
 void setup() {
   Serial.begin(115200);
@@ -37,51 +35,65 @@ void setup() {
   pinMode(ACTIVE_BUZZER, OUTPUT);
 
   // 인터럽트 추가
-  //attachPCINT(digitalPinToPCINT(button[0]), buttonPressed1, RISING); // 5번핀
-  //attachPCINT(digitalPinToPCINT(button[1]), buttonPressed2, RISING); // 4번핀
-  //attachInterrupt(digitalPinToInterrupt(button[2]), buttonPressed3, RISING); // 3번핀
-  //attachInterrupt(digitalPinToInterrupt(button[3]), buttonPressed4, RISING); // 2번핀
-
-  for (int i = 0; i < 4; i++) {
-    if (button[i] == 2 || button[i] == 3) {
-      attachInterrupt(digitalPinToInterrupt(button[i]), fp[i], RISING);
-    }
-    else {
-      attachPCINT(digitalPinToPCINT(button[i]), fp[i], RISING);
-    }
-  }
+  attachPCINT(digitalPinToPCINT(button[0]), buttonPressed1, RISING); // 5번핀
+  attachPCINT(digitalPinToPCINT(button[1]), buttonPressed2, RISING); // 4번핀
+  attachInterrupt(digitalPinToInterrupt(button[2]), buttonPressed3, RISING); // 3번핀
+  attachInterrupt(digitalPinToInterrupt(button[3]), buttonPressed4, RISING); // 2번핀
 }
 
 void buttonPressed1() {
-  checkingAnswer(1);
-}
-void buttonPressed2() {
-  checkingAnswer(2);
-}
-void buttonPressed3() {
-  checkingAnswer(3);
-}
-void buttonPressed4() {
-  checkingAnswer(4);
-}
-
-void checkingAnswer(int num) {
+  int num = 1;
   int answer = answers[currentQuestion - 1];
   // 정답일 경우
   if (num == answer) {
-      // 440, 554, 659, 880 (딩동댕동!!)
-      tone(BUZZER, 440); delay(300); noTone(BUZZER);
-      tone(BUZZER, 554); delay(300); noTone(BUZZER);
-      tone(BUZZER, 659); delay(300); noTone(BUZZER);
-      tone(BUZZER, 880); delay(300); noTone(BUZZER);
+      buzzerMode = 1;
       step++;
   }
   // 정답이 아닐 경우
   else {
-    // 능동 부저 (땡!)
-    digitalWrite(ACTIVE_BUZZER, HIGH);
-    delay(1000);
-    digitalWrite(ACTIVE_BUZZER, LOW);
+    buzzerMode = 2;
+  }
+}
+
+void buttonPressed2() {
+  int num = 2;
+  int answer = answers[currentQuestion - 1];
+  // 정답일 경우
+  if (num == answer) {
+      buzzerMode = 1;
+      step++;
+  }
+  // 정답이 아닐 경우
+  else {
+    buzzerMode = 2;
+  }
+}
+
+void buttonPressed3() {
+  int num = 3;
+  int answer = answers[currentQuestion - 1];
+  // 정답일 경우
+  if (num == answer) {
+      buzzerMode = 1;
+      step++;
+  }
+  // 정답이 아닐 경우
+  else {
+    buzzerMode = 2;
+  }
+}
+
+void buttonPressed4() {
+  int num = 4;
+  int answer = answers[currentQuestion - 1];
+  // 정답일 경우
+  if (num == answer) {
+      buzzerMode = 1;
+      step++;
+  }
+  // 정답이 아닐 경우
+  else {
+    buzzerMode = 2;
   }
 }
 
@@ -101,6 +113,22 @@ void loop() {
   else if (step == 2) {
     // IDLE
     // 스위치의 인터럽트 발생을 기다리고 있는 중
+
+    if (buzzerMode == 1) {
+      // 440, 554, 659, 880 (딩동댕동!!)
+      tone(BUZZER, 440); delay(300); noTone(BUZZER);
+      tone(BUZZER, 554); delay(300); noTone(BUZZER);
+      tone(BUZZER, 659); delay(300); noTone(BUZZER);
+      tone(BUZZER, 880); delay(300); noTone(BUZZER);
+      buzzerMode = 0;
+    }
+    else if (buzzerMode == 2) {
+      // 능동 부저 (땡!)
+      digitalWrite(ACTIVE_BUZZER, HIGH);
+      delay(1000);
+      digitalWrite(ACTIVE_BUZZER, LOW);
+      buzzerMode = 0;
+    }
   }
   else if (step == 3) {
     step = 1;
