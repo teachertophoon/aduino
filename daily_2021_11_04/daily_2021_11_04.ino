@@ -21,7 +21,7 @@ const char *options[2] = {
 };
 
 // 답
-const int answers[2] = { 1, 1 };
+const int answers[2] = { 4, 1 };
 
 void buttonPressed1() {
   checkingAnswer(1);
@@ -75,7 +75,6 @@ void checkingAnswer(int num) {
   // 정답일 경우
   if (num == answer) {
       buzzerMode = 1;
-      step++;
   }
   // 정답이 아닐 경우
   else {
@@ -107,6 +106,7 @@ void loop() {
       tone(BUZZER, 659); delay(300); noTone(BUZZER);
       tone(BUZZER, 880); delay(300); noTone(BUZZER);
       buzzerMode = 0;
+      step++;
     }
     else if (buzzerMode == 2) {
       // 능동 부저 (땡!)
