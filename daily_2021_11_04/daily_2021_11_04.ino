@@ -42,49 +42,22 @@ void setup() {
 }
 
 void buttonPressed1() {
-  int num = 1;
-  int answer = answers[currentQuestion - 1];
-  // 정답일 경우
-  if (num == answer) {
-      buzzerMode = 1;
-      step++;
-  }
-  // 정답이 아닐 경우
-  else {
-    buzzerMode = 2;
-  }
+  checkingAnswer(1);
 }
 
 void buttonPressed2() {
-  int num = 2;
-  int answer = answers[currentQuestion - 1];
-  // 정답일 경우
-  if (num == answer) {
-      buzzerMode = 1;
-      step++;
-  }
-  // 정답이 아닐 경우
-  else {
-    buzzerMode = 2;
-  }
+  checkingAnswer(2);
 }
 
 void buttonPressed3() {
-  int num = 3;
-  int answer = answers[currentQuestion - 1];
-  // 정답일 경우
-  if (num == answer) {
-      buzzerMode = 1;
-      step++;
-  }
-  // 정답이 아닐 경우
-  else {
-    buzzerMode = 2;
-  }
+  checkingAnswer(3);
 }
 
 void buttonPressed4() {
-  int num = 4;
+  checkingAnswer(4);
+}
+
+void checkingAnswer(int num) {
   int answer = answers[currentQuestion - 1];
   // 정답일 경우
   if (num == answer) {
