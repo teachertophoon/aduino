@@ -22,6 +22,9 @@ const char *options[2] = {
 // 답
 const int answers[2] = { 4, 1 };
 
+// 함수 포인터 배열
+void (*fp[4])() = { buttonPressed1, buttonPressed2, buttonPressed3, buttonPressed4 }; 
+
 void setup() {
   Serial.begin(115200);
 
@@ -34,10 +37,19 @@ void setup() {
   pinMode(ACTIVE_BUZZER, OUTPUT);
 
   // 인터럽트 추가
-  attachPCINT(digitalPinToPCINT(button[0]), buttonPressed1, RISING); // 5번핀
-  attachPCINT(digitalPinToPCINT(button[1]), buttonPressed2, RISING); // 4번핀
-  attachInterrupt(digitalPinToInterrupt(button[2], buttonPressed3, RISING); // 3번핀
-  attachInterrupt(digitalPinToInterrupt(buttton[3], buttonPressed4, RISING); // 2번핀
+  //attachPCINT(digitalPinToPCINT(button[0]), buttonPressed1, RISING); // 5번핀
+  //attachPCINT(digitalPinToPCINT(button[1]), buttonPressed2, RISING); // 4번핀
+  //attachInterrupt(digitalPinToInterrupt(button[2]), buttonPressed3, RISING); // 3번핀
+  //attachInterrupt(digitalPinToInterrupt(button[3]), buttonPressed4, RISING); // 2번핀
+
+  for (int i = 0; i < 4; i++) {
+    if (button[i] == 2 || button[i] == 3) {
+      attachInterrupt(digitalPinToInterrupt(button[i]), fp[i], RISING);
+    }
+    else {
+      attachPCINT(digitalPinToPCINT(button[i]), fp[i], RISING);
+    }
+  }
 }
 
 void buttonPressed1() {
