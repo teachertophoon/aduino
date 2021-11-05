@@ -41,67 +41,19 @@ void setup() {
 }
 
 void buttonPressed1() {
-  int num = 1;
-  int answer = answers[currentQuestion - 1];
-  // 정답일 경우
-  if (num == answer) {
-      // 440, 554, 659, 880 (딩동댕동!!)
-      tone(BUZZER, 440); delay(300); noTone(BUZZER);
-      tone(BUZZER, 554); delay(300); noTone(BUZZER);
-      tone(BUZZER, 659); delay(300); noTone(BUZZER);
-      tone(BUZZER, 880); delay(300); noTone(BUZZER);
-      step++;
-  }
-  // 정답이 아닐 경우
-  else {
-    // 능동 부저 (땡!)
-    digitalWrite(ACTIVE_BUZZER, HIGH);
-    delay(1000);
-    digitalWrite(ACTIVE_BUZZER, LOW);
-  }
+  checkingAnswer(1);
 }
 void buttonPressed2() {
-  int num = 2;
-  int answer = answers[currentQuestion - 1];
-  // 정답일 경우
-  if (num == answer) {
-      // 440, 554, 659, 880 (딩동댕동!!)
-      tone(BUZZER, 440); delay(300); noTone(BUZZER);
-      tone(BUZZER, 554); delay(300); noTone(BUZZER);
-      tone(BUZZER, 659); delay(300); noTone(BUZZER);
-      tone(BUZZER, 880); delay(300); noTone(BUZZER);
-      step++;
-  }
-  // 정답이 아닐 경우
-  else {
-    // 능동 부저 (땡!)
-    digitalWrite(ACTIVE_BUZZER, HIGH);
-    delay(1000);
-    digitalWrite(ACTIVE_BUZZER, LOW);
-  }
+  checkingAnswer(2);
 }
 void buttonPressed3() {
-  int num = 3;
-  int answer = answers[currentQuestion - 1];
-  // 정답일 경우
-  if (num == answer) {
-      // 440, 554, 659, 880 (딩동댕동!!)
-      tone(BUZZER, 440); delay(300); noTone(BUZZER);
-      tone(BUZZER, 554); delay(300); noTone(BUZZER);
-      tone(BUZZER, 659); delay(300); noTone(BUZZER);
-      tone(BUZZER, 880); delay(300); noTone(BUZZER);
-      step++;
-  }
-  // 정답이 아닐 경우
-  else {
-    // 능동 부저 (땡!)
-    digitalWrite(ACTIVE_BUZZER, HIGH);
-    delay(1000);
-    digitalWrite(ACTIVE_BUZZER, LOW);
-  }
+  checkingAnswer(3);
 }
 void buttonPressed4() {
-  int num = 4;
+  checkingAnswer(4);
+}
+
+void checkingAnswer(int num) {
   int answer = answers[currentQuestion - 1];
   // 정답일 경우
   if (num == answer) {
