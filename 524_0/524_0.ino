@@ -73,7 +73,7 @@ void setup() {
 
 void loop() {
   // p.300
-  static unsigned int num = 0; // static 키워드가 붙으면 전역변수와 동일하게 동작합니다.
+  static unsigned int num = 0; // static 키워드가 붙으면 지역변수와 동일하게 동작합니다.
   num++;
 
   // p.301
