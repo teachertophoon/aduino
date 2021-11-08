@@ -1,4 +1,4 @@
-// p.293 (공통 양극 4자리 7세그먼트)
+// p.299 (공통 양극 4자리 7세그먼트)
 
 const unsigned int led[7] = { 2, 3, 4, 5, 6, 7, 8 };
 const unsigned int com[1+4] = { -1, 9, 10, 11, 12 };
@@ -47,22 +47,42 @@ void display_number(unsigned int n, unsigned int m) {
   }
 }
 
+void display_numbers(unsigned int num) {
+  // 변수 num이 1일 경우, 변수 num이 5678일 경우
+  unsigned int num_1000 = num / 1000; // 0, 5
+  unsigned int num_100 = (num % 1000) / 100; // 0, 6
+  unsigned int num_10 = (num % 100) / 10; // 0, 7
+  unsigned int num_1 = num % 10; // 1, 8
+
+  // 변수 num이 1일 경우는 0001
+  // 변수 num이 5678일 경우는 5678
+
+  display_number(num_1000, 1);
+  delay(1);
+  display_number(num_100, 2);
+  delay(1);
+  display_number(num_10, 3);
+  delay(1);
+  display_number(num_1, 4);
+  delay(1);
+}
+
 void setup() {
   display_init();
 }
 
 void loop() {
-  display_number(1, 1); // 함수 호출
-  delay(1);
-  display_number(2, 2);
-  delay(1);
-  display_number(3, 3);
-  delay(1);
-  display_number(4, 4);
-  delay(1);
-  // 0.5 Hz <= 50Hz
-  // 5 Hz <= 50Hz
-  // 50 Hz <= 50Hz
-  // 250 Hz > 50Hz (좀 더 부드러워 보인다.)
-  // 예) 60Hz > 120Hz
+  // p.300
+  static unsigned int num = 0; // static 키워드가 붙으면 전역변수와 동일하게 동작합니다.
+  num++;
+
+  // p.301
+  unsigned int cnt = 0;
+  while(1) {
+    display_numbers(num); // 한 번 호출하는데 0.004초 소요
+    cnt++;
+    if (cnt == 25) break;
+  }
+  // cnt: 250 while문 한 번 실행하는데 총 1초가 소요
+  // cnt: 25 while문 한 번 실행하는데 총 0.1초가 소요
 }
