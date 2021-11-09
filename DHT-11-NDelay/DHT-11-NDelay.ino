@@ -7,11 +7,6 @@
 #define DHTTYPE DHT11
 DHT dht(DHTPIN, DHTTYPE);
 
-// 3-1. 전역변수로 NDelayFunc 객체를 생성한다.
-// 3-2. 객체 생성 시, 첫 번째 파라메터는 몇초마다 반복할지 설정
-// 3-3. 객체 생성 시, 두 번째 파라메터는 반복 실행할 함수명(2번에서 작성한 함수명)을 작성
-NDelayFunc nDelayReadDHT(1000, readDHT);
-
 float h; // 습도
 float t; // 온도
 
@@ -25,6 +20,11 @@ void readDHT() {
   Serial.print("Temperature: ");
   Serial.println(t);
 }
+
+// 3-1. 전역변수로 NDelayFunc 객체를 생성한다.
+// 3-2. 객체 생성 시, 첫 번째 파라메터는 몇초마다 반복할지 설정
+// 3-3. 객체 생성 시, 두 번째 파라메터는 반복 실행할 함수명(2번에서 작성한 함수명)을 작성
+NDelayFunc nDelayReadDHT(1000, readDHT);
 
 void setup() {
   Serial.begin(9600);
