@@ -5,15 +5,15 @@
 #include "DHT.h"
 #define DHTPIN 2
 #define DHTTYPE DHT11
-DHT dht(DHTPIN, DHTTYPE);
+DHT dht(DHTPIN, DHTTYPE); // DHT 객체를 생성, dht(2, 11)
 
 float h; // 습도
 float t; // 온도
 
 // 2. 반복 실행할 코드를 함수로 만든다.
 void readDHT() {
-  h = dht.readHumidity();
-  t = dht.readTemperature();
+  h = dht.readHumidity(); // 현재 측정된 습도 값 가져오는 함수 호출
+  t = dht.readTemperature(); // 현재 측정된 온도 값 가져오는 함수 호출
 
   Serial.print("Humidity: ");
   Serial.println(h);
@@ -28,7 +28,7 @@ NDelayFunc nDelayReadDHT(1000, readDHT);
 
 void setup() {
   Serial.begin(9600);
-  dht.begin();
+  dht.begin(); // 1. DHT 클래스에 정의된 begin 함수 호출
 }
 
 void loop() {
