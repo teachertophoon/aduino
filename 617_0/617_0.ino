@@ -9,9 +9,9 @@ class NDelayFunc {
   public: // 클래스를 객체화 한 뒤, 외부에서 호출 가능한 부분 (접근제한자)
     // 생성자
     NDelayFunc(
-      const unsigned long t_delay,
-      void (* func)()
-      ) : t_prev(0), t_delay(t_delay), func(func) // 멤버 초기화 리스트
+      const unsigned long t_delay1,
+      void (* func1)()
+      ) : t_prev(0), t_delay(t_delay1), func(func1) // 멤버 초기화 리스트
       {} 
 
   void run() {
