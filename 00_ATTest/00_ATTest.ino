@@ -9,7 +9,7 @@ void setup() {
 
 void loop() {
   if (serial1.available()) {
-    Serial.write(serial1.read());
+    Serial.write(serial1.read()); // write 함수는 byte 출력, print 함수와 동일한 기능
   }
 
   if (Serial.available()) {

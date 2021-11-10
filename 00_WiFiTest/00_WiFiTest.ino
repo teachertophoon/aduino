@@ -7,7 +7,7 @@ SoftwareSerial Serial1(2, 3); // TX, RX (아두이노는 RX, TX 순)
 char ssid[] = "HYOSUNG-2G"; // 공유기 WiFi 이름
 char pass[] = "hshs7001"; // 공유기 비밀번호
 
-WiFiEspServer server(80);
+WiFiEspServer server(80); // 80번 포트 사용하는 서버 객체를 생성
 
 void setup() {
   // debugging을 위한 시리얼 초기화
@@ -33,21 +33,23 @@ void setup() {
 
 void loop() {
   // 클라이언트 접속여부 확인 (Listen)
-  WiFiEspClient client = server.available();
+  WiFiEspClient client = server.available(); // 아두이노 얼음(Listen)
 
   if (client) {
     Serial.println("새로운 클라이언트 접속");
 
     // 테스트를 위한 HTML 응답
-    client.print("HTTP/1.1 200 OK\r\n");
-    client.print("Content-Type: text/html\r\n");
-    client.print("\r\n");
+    client.print("HTTP/1.1 200 OK\r\n"); // HTTP 프로토콜 사용 상태코드 200 OK, '\r\n'는 엔터키
+    client.print("Content-Type: text/html\r\n"); // 클라이언트에게 현재 문서의 타입을 알려준다.
+    client.print("\r\n"); // 한 줄을 비운 뒤에 나오는 정보는 문서의 내용이다.
+                          // 한 줄 비우기 전까지의 내용은 헤더정보(Response Header)
+                          // 한 줄 비운 뒤의 내용은 클라이언트에게 보여줄 문서 내용(Body)
     client.print("<!DOCTYPE HTML>\r\n");
     client.print("<html>\r\n");
-    client.print("<h1>아두이노 서버 접속 성공!</h1>\r\n");
+    client.print("<h1>Arduino Server Success!!</h1>\r\n");
     client.print("</html>\r\n");
-    client.flush();
-    client.stop();
+    client.flush(); // 클라이언트에게 보내줄 정보를 누락없이 마무리하여 보내주도록 하는 함수
+    client.stop(); // 서버와 클라이언트 간의 연결을 끊어주는 역할
     Serial.println("클라이언트 연결 끊김");
   }
 }
