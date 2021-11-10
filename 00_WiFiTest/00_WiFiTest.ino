@@ -33,7 +33,7 @@ void setup() {
 
 void loop() {
   // 클라이언트 접속여부 확인 (Listen)
-  WiFiEspClient client = server.available(); // 아두이노 얼음(Listen)
+  WiFiEspClient client = server.available(); // (Listen)
 
   if (client) {
     Serial.println("새로운 클라이언트 접속");
