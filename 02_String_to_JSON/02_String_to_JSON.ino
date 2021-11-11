@@ -89,6 +89,12 @@ void loop() {
       dataLength[cnt] = '\0';
       Serial.print("JSON 문자열: ");
       Serial.println(dataLength);
+
+      // JSON 문자열을 JSON 객체로 변경
+      StaticJsonDocument<50> doc;
+      deserializeJson(doc, dataLength);
+      const char* message = doc["message"];
+      Serial.println(message);
     }
     free(dataLength);
 
