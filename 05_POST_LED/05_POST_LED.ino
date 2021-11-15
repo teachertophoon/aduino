@@ -9,6 +9,9 @@ char pass[] = "hshs7001"; // 공유기 비밀번호
 
 WiFiEspServer server(80); // 80번 포트 사용하는 서버 객체를 생성
 
+const int LED = 13;
+unsigned int on_off = 0;
+
 void getHeaderValue(char* src, char* dst, char* start) {
   char* pStart = strstr(src, start);
   int cnt = 0;
@@ -21,6 +24,8 @@ void getHeaderValue(char* src, char* dst, char* start) {
 }
 
 void setup() {
+  pinMode(LED, OUTPUT);
+  
   // debugging을 위한 시리얼 초기화
   Serial.begin(9600);
 
@@ -89,42 +94,44 @@ void loop() {
                 // LED 켜기
                 Serial.println("LED가 켜졌습니다.");
                 // 1. LED 켜는 Arduino 코드를 작성
+                on_off = 1;
               }
               else {
                 // LED 끄기
                 Serial.println("LED가 꺼졌습니다.");
                 // 2. LED 끄는 Arduino 코드를 작성
+                on_off = 0;
               }
-              break;
+              digitalWrite(LED, on_off);
           }
         }
         free(dataLength);
+        free(buf);
+
+        // JSON 응답
+        // 응답 헤더정보
+        client.print("HTTP/1.1 200 OK\r\n");
+        client.print("Content-Type: application/json;charset=utf-8\r\n");
+        client.print("Server: Arduino\r\n");
+        client.print("Access-Control-Allow-Origin: *\r\n");
+        client.print("\r\n");
+    
+        // 응답 바디정보 (JSON 응답)
+        String body = "";
+        DynamicJsonDocument doc(50);
+        doc["message"] = "success";
+        doc["type"] = "LED";
+        doc["action_result"] = on_off == 1 ? "on" : "off";
+        serializeJson(doc, body);
+        client.print(body);
+        client.print("\r\n");
+        Serial.print("응답 바디정보: ");
+        Serial.println(body);
+        
+        client.flush(); // 클라이언트에게 보내줄 정보를 누락없이 마무리하여 보내주도록 하는 함수
+        client.stop(); // 서버와 클라이언트 간의 연결을 끊어주는 역할
+        Serial.println("클라이언트 연결 끊김");
       }
     }
-    free(buf);
-
-    // JSON 응답
-    // 응답 헤더정보
-    client.print("HTTP/1.1 200 OK\r\n");
-    client.print("Content-Type: application/json;charset=utf-8\r\n");
-    client.print("Server: Arduino\r\n");
-    client.print("Access-Control-Allow-Origin: *\r\n");
-    client.print("\r\n");
-
-    // 응답 바디정보 (JSON 응답)
-    String body = "";
-    DynamicJsonDocument doc(50);
-    doc["message"] = "success";
-    doc["type"] = "LED";
-    doc["action_result"] = "on";
-    serializeJson(doc, body);
-    client.print(body);
-    client.print("\r\n");
-    Serial.print("응답 바디정보: ");
-    Serial.println(body);
-    
-    client.flush(); // 클라이언트에게 보내줄 정보를 누락없이 마무리하여 보내주도록 하는 함수
-    client.stop(); // 서버와 클라이언트 간의 연결을 끊어주는 역할
-    Serial.println("클라이언트 연결 끊김");
   }
 }
