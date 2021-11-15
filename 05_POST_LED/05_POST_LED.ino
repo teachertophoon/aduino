@@ -1,5 +1,5 @@
-// WiFi 모듈 ESP-01 테스트 코드
-
+#include "ArduinoJson.h"
+#include <stdlib.h>
 #include "WiFiEsp.h"
 #include "SoftwareSerial.h"
 SoftwareSerial Serial1(2, 3); // TX, RX (아두이노는 RX, TX 순)
@@ -8,6 +8,17 @@ char ssid[] = "HYOSUNG-2G"; // 공유기 WiFi 이름
 char pass[] = "hshs7001"; // 공유기 비밀번호
 
 WiFiEspServer server(80); // 80번 포트 사용하는 서버 객체를 생성
+
+void getHeaderValue(char* src, char* dst, char* start) {
+  char* pStart = strstr(src, start);
+  int cnt = 0;
+  if (pStart != NULL) {
+    for (int i = strlen(start); pStart + i != strstr(pStart, "\r\n"); i++) {
+      dst[cnt++] = pStart[i];
+    }
+    dst[cnt] = '\0';
+  }
+}
 
 void setup() {
   // debugging을 위한 시리얼 초기화
@@ -39,7 +50,7 @@ void loop() {
     Serial.println("새로운 클라이언트 접속");
 
     // Django 서버로부터 전달받은 요청처리
-    char* buf = (char*)malloc(sizeof(char) * 512); // 요청받은 내용 저장공간 512Byte
+    char* buf = (char*)malloc(sizeof(char) * 256); // 요청받은 내용 저장공간 256Byte
     int index = 0;
     while (client.connected()) {
       if (client.available()) {
@@ -66,6 +77,26 @@ void loop() {
           dataLength[cnt] = '\0';
           Serial.print("직렬화 된 JSON: ");
           Serial.println(dataLength);
+
+          // 직렬화 된 JSON을 역직렬화하여 JSON 객체로 변경
+          StaticJsonDocument<50> doc;
+          deserializeJson(doc, dataLength);
+          const char* type = doc["type"];
+          const char* action = doc["action"];
+
+          if (strcmp("LED", type) == 0) {
+              if (strcmp("on", action) == 0) {
+                // LED 켜기
+                Serial.println("LED가 켜졌습니다.");
+                // 1. LED 켜는 Arduino 코드를 작성
+              }
+              else {
+                // LED 끄기
+                Serial.println("LED가 꺼졌습니다.");
+                // 2. LED 끄는 Arduino 코드를 작성
+              }
+              break;
+          }
         }
         free(dataLength);
         free(buf);
@@ -73,6 +104,25 @@ void loop() {
     }
 
     // JSON 응답
+    // 응답 헤더정보
+    client.print("HTTP/1.1 200 OK\r\n");
+    client.print("Content-Type: application/json;charset=utf-8\r\n");
+    client.print("Server: Arduino\r\n");
+    client.print("Access-Control-Allow-Origin: *\r\n");
+    client.print("\r\n");
+
+    // 응답 바디정보 (JSON 응답)
+    String body = "";
+    DynamicJsonDocument doc(50);
+    doc["message"] = "success";
+    doc["type"] = "LED";
+    doc["action_result"] = "on";
+    serializeJson(doc, body);
+    client.print(body);
+    client.print("\r\n");
+    Serial.print("응답 바디정보: ");
+    Serial.println(body);
+    
     client.flush(); // 클라이언트에게 보내줄 정보를 누락없이 마무리하여 보내주도록 하는 함수
     client.stop(); // 서버와 클라이언트 간의 연결을 끊어주는 역할
     Serial.println("클라이언트 연결 끊김");
