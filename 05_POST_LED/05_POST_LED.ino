@@ -55,7 +55,7 @@ void loop() {
     Serial.println("새로운 클라이언트 접속");
 
     // Django 서버로부터 전달받은 요청처리
-    char* buf = (char*)malloc(sizeof(char) * 256); // 요청받은 내용 저장공간 256Byte
+    char* buf = (char*)malloc(sizeof(char) * 500); // 요청받은 내용 저장공간 500Byte
     int index = 0;
     while (client.connected()) {
       if (client.available()) {
@@ -66,6 +66,11 @@ void loop() {
         char* dataLength = (char*)malloc(sizeof(char) * 50); // 50Byte 메모리 할당
         getHeaderValue(buf, dataLength, "Content-Length: ");
         int length = atoi(dataLength); // 문자열을 정수로 변환
+
+        // buf 내용 출력
+        for (int i = 0; i < index; i++) {
+          Serial.print(buf[i]);
+        }
 
         // JSON 문자열을 요청받은 문자열로부터 끄집어 내기
         if (length > 0) {
