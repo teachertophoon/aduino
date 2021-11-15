@@ -99,9 +99,9 @@ void loop() {
           }
         }
         free(dataLength);
-        free(buf);
       }
     }
+    free(buf);
 
     // JSON 응답
     // 응답 헤더정보
